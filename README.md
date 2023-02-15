@@ -83,6 +83,7 @@ Before you execute the build-script, modify the file **build_params.json** to yo
 | worker_nodes.hostname | Hostname of the worker node |
 | worker_nodes.node_network_ip | Node-Network IP of the worker node in CIDR format |
 | shared_folder | Insert a folder which you have access to which the script can use to save appliance IP address information for you and which is used to transfer information for populating nodes to the cluster |
+
 The **worker_nodes** attributes holds an array of worker-node configurations. That means that if you specify 10 worker-node configurations, than 10 VMs will be build as workers and populated into the cluster producing 10 images.
 
 # Create Images
