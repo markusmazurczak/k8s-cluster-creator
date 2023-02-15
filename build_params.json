@@ -1,0 +1,45 @@
+{
+    "country_code": "DE",
+    "zoneinfo": "Europe/Berlin",
+    "iso": {
+        "url": "http://ftp.halifax.rwth-aachen.de/archlinux/iso/latest/archlinux-x86_64.iso",
+        "checksum": "file:http://ftp.halifax.rwth-aachen.de/archlinux/iso/latest/sha256sums.txt"
+    },
+    "username": "kubuser",
+    "hdd_size": 20000,
+    "network": {
+        "pod_network_cidr": "10.10.0.0/24",
+        "node_network_cidr": "192.168.10.0/24",
+        "nodeport_network_cidr": "192.168.15.0/24",
+        "node_network_iface_name": "enp0s8",
+        "nodeport_iface_name": "enp0s9",
+        "nodeport_hostdevice_name": "VirtualBox Host-Only Ethernet Adapter #3"
+    },
+    "control_node": {
+        "num_of_cpus": 6,
+        "mem_size": 16384,
+        "hostname": "k8s-control",
+        "node_network_ip": "192.168.10.10/24"
+    },
+    "worker_nodes": [
+        {
+            "num_of_cpus": 2,
+            "mem_size": 8192,
+            "hostname": "k8s-worker-1",
+            "node_network_ip": "192.168.10.11/24"
+        },
+        {
+            "num_of_cpus": 2,
+            "mem_size": 8192,
+            "hostname": "k8s-worker-2",
+            "node_network_ip": "192.168.10.12/24"
+        },
+        {
+            "num_of_cpus": 2,
+            "mem_size": 8192,
+            "hostname": "k8s-worker-3",
+            "node_network_ip": "192.168.10.13/24"
+        }
+    ],
+    "shared_folder": "C:\\Users\\Markus\\Desktop\\share"
+}
