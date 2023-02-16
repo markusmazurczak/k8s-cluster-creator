@@ -1,5 +1,5 @@
 # Kubernetes Setup
-This readme guides you through the process of setting up an preconfigured kubernetes environment with multiple VirtualBox images.
+This readme guides you through the process of setting up an preconfigured kubernetes environment. This environment consists out of multiple VirtualBox Images.
 Because I was too lazy to script everything there are one or two prerequisites that you have to execute manually in advance.
 
 The images are build using HashiCorp's Packer so you can re-configure everything you need to change the VM's as long as you know what you do ;). But I recommend
@@ -14,7 +14,7 @@ The internal POD-Network which all Pods use to communicate internaly. I use [Cal
 ## NATNetwork
 For Node-Communication I use an VBox Managed NATNatwork.
 ## Node-Port-Network
-Because the cluster these scripts create are for developement or administrative purposes there is no ingress controller as like an external load balancer. I use K8S NodePort to make services accessible
+Because the cluster these scripts create are for developement or administrative purposes there is no ingress controller. I use the NodePort-Service to make services accessible.
 
 # Prerequisites
 ## Install VirtualBox
@@ -51,13 +51,13 @@ In this example a new interface named "VirtualBox Host-Only Ethernet Adapter #4"
 It is important that this name is configured as the value of the variable **nodeport_hostdevice_name** in **build_params.json**.
 
 After creating the new virtual interface you have to configure the automatically created DHCP-Server to your needs.
-To create the NodePort-HostOnly Network execute the following command:
+To do that execute:
 ```
 VBoxManage.exe dhcpserver modify --interface "VirtualBox Host-Only Ethernet Adapter #4" --server-ip=192.168.15.2 --netmask=255.255.255.0 --lower-ip=192.168.15.100 --upper-ip=192.168.15.254 --enable
 ```
 Make sure to set
 - *interface* To the name of the virtual interface you created before
-- And the IP Adresses as you want to but make sure to set the attribut **nodeport_network_cidr** in **build_params.json** like you made your configuration here in CIDR format
+- And the IP Adresses as you want to but make sure to set the attribut **nodeport_network_cidr** in **build_params.json** to values matching your DHCP range in CIDR format
 # Configuration
 Before you execute the build-script, modify the file **build_params.json** to your needs.
 | Attribute | Description |
@@ -82,7 +82,7 @@ Before you execute the build-script, modify the file **build_params.json** to yo
 | worker_nodes.mem_size | Memory size in MB for the worker node appliance |
 | worker_nodes.hostname | Hostname of the worker node |
 | worker_nodes.node_network_ip | Node-Network IP of the worker node in CIDR format |
-| shared_folder | Insert a folder which you have access to which the script can use to save appliance IP address information for you and which is used to transfer information for populating nodes to the cluster |
+| shared_folder | Insert a folder which you have access to which the script can use to save appliance IP address information for you, which is used to transfer information for populating nodes to the cluster and for saving a temporary ssh keypair |
 
 The **worker_nodes** attributes holds an array of worker-node configurations. That means that if you specify 10 worker-node configurations, than 10 VMs will be build as workers and populated into the cluster producing 10 images.
 
@@ -113,10 +113,10 @@ EVERY IMAGE ALREADY CREATED WILL BE DELETED WHEN EXECUTING
 During the process of creating all images there will pop up some VirtualBox windows and temp images will be imported and exported. Please do not close the windows or delete the imported images. If everything goes well, all windows will be closed and all imported images will be deleted.
 ## Image location
 The created images are located in the **images** folder.
-You can find your control-plane image in folder: **images\k8s-control-plane**
-You can find all your configured worker-nodes in folder: **images\worker**
+You can find your control-plane image in folder: **images\k8s-control-plane**.
+You can find all your configured worker-nodes in folder: **images\worker**.
 
-That import the appliances in you VirtualBox and you are good to go. To access the imported appliances configure a ssh port-forwarding into the machine and use the configured username as username and password.
+Than import the appliances in your VirtualBox and you are good to go. To access the imported appliances configure a ssh port-forwarding into the machine and use the configured username as username and password.
 
 # Test the cluster
 Some usefull commands to get the status of the cluster after all VMs are started. Everything should be executed on the control-plane node.
@@ -164,6 +164,11 @@ Because the IPs of the NodePort Service are assigned using DHCP the build-script
 The interface which "holds" the NodePort IP is the one you configured in variable **nodeport_iface_name**. It's default will be enp0s9.
 # Errors
 If an error occurs. Just start the process of creation again. The script is not failsafe and most of the time it will be clean up afterwards.
+
+Some error's I've seen so far:
+- IO Hickup in host which leads to longer running processes and timeouts
+- Partial DNS failure during pacman resolves
+- CPU Stuck-Bug in VBox
 # Build time
 Just to give you an idea of how long it could take to create a cluster with one control-plane-node and 3 workers from scratch (the arch linux was already downloaded) with the following configuration:
 ```json

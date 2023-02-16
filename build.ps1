@@ -50,6 +50,9 @@ function build_master {
         " -var=node_network_ip_master="+$buildParams.control_node.node_network_ip +`
         " -var=node_network_iface_name="+$buildParams.network.node_network_iface_name +`
         " -var=nodeport_iface_name="+$buildParams.network.nodeport_iface_name
+
+    Write-Host("Create a new SSH Keypair") -ForegroundColor Green
+    Write-Output 'y\n' | ssh-keygen.exe -b 4096 -f "$($buildParams.shared_folder)\id_rsa" -N '""' -q
     $r = execute_build -t "master" -args $p
     return $r
 }
@@ -100,7 +103,7 @@ function buildWorkerAndAddToCluster {
     #Give the VM time to start
     Write-Host("Waiting 30 seconds to give the control-node a chance to boot and fire up sshd") -ForegroundColor Green
     Start-Sleep -Seconds 30
-    ssh -o StrictHostKeyChecking=no -l $buildParams.username -p22222 -i id_rsa 127.0.0.1 timeout 2m kubectl wait --for=condition=ready node --all -A --timeout -1s
+    ssh -o StrictHostKeyChecking=no -l $buildParams.username -p22222 -i "$($buildParams.shared_folder)\id_rsa" 127.0.0.1 timeout 2m kubectl wait --for=condition=ready node --all -A --timeout -1s
     if($LASTEXITCODE -ne 0) {
         Write-Host("Worker node was not ready in time") -ForegroundColor Red
         Write-Host("Stopping vm: ", $vmName) -ForegroundColor Green
@@ -119,7 +122,7 @@ function buildWorkerAndAddToCluster {
         }
     }
     Write-Host("Stopping vm: ", $vmName) -ForegroundColor Green
-    ssh -o StrictHostKeyChecking=no -l $buildParams.username -p22222 -i id_rsa 127.0.0.1 sudo systemctl poweroff
+    ssh -o StrictHostKeyChecking=no -l $buildParams.username -p22222 -i "$($buildParams.shared_folder)\id_rsa" 127.0.0.1 sudo systemctl poweroff
     $shutdown = $false
     for($i = 0; $i -lt 5; $i++) {
         Write-Host("Waiting 20 seconds to give the control-node a chance to poweroff correctly") -ForegroundColor Green

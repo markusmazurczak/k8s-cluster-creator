@@ -45,8 +45,8 @@ yay -S --noconfirm calicoctl
 #Wait max 5 minutes to get all pods started
 timeout 5m kubectl wait --for=condition=ready pod --all -A --timeout -1s
 if [ $? -ne 0 ]; then
-    echo "NOT ALL PODS COULD BE INITIALIZED IN-TIME"
-    exit 1
+  echo "NOT ALL PODS COULD BE INITIALIZED IN-TIME"
+  exit 1
 fi
 
 sudo crictl config > /dev/null 2>&1
@@ -59,7 +59,8 @@ echo "=====================================" >> /mnt/share/k8s_cluster_ipconfig-
 ip addr >> /mnt/share/k8s_cluster_ipconfig-${VM_HOSTNAME}.txt
 
 mkdir ~/.ssh 2> /dev/null
-echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCSdq/CCqTQm3YzhbI1jMu3XNLQdGjNjTMqQ7xl41o+va0kf1BtNlGdIDNZLxfwcovZrOIK/eXhGvrl130i94aaewrXxwMejo0Y4yETBJFor5uZFPnbsaLLlqSWBgHLmIR6sVkRfeHO/9aaCjQ3dQyQKDZyMIOU0Mp6r7ooKvWrn5tkJSy/iVus8Zq5QDGA11KzGkxb9CKGAbvXVUkrZFIklkps9IdYAQz0H/VT/TmAuboZwvAQpi8Gc9cbL6ZhEx3NSNPNPr31BWD6qJQWHSZf+6vOzqMfEz/akRfBrpXqKhcACQM2gKI/4I+ZWBCFdOvzNzNzG9RjQSS3aVVWVmBfo+rrFGMHr/CmSkSoZjcrO/KEaP1njLxFwSfZik6ngArIae1rgVIm3dgrg1lyD2jjW7tErc7gxlgGIU1NVKPnjLd4K+Gt24EIvBxbcVsR6PL5nA/NHbn41LJ5eSwTP5E0EojuTDNIfrlTgCk8uDkODyrNc791F0MRTCMk1Hy88lCb4OF+NdEtC2QcaSIYtmHbBovXszbYeIk5/5ESSKKr0kZbnRD7oi3jLuz57ZZz+8xaJ10lhzReQVX2xDqboanjBsI55HxIe9Cmdqwszg8zhvK6PKCAVV4AnPoCc2LexfmfEXWrhVun6sSu9s3tkZWc6Ko0MD1nDST9d/6VAnnilw== rsa-key-20230202" >> ~/.ssh/authorized_keys
+cat /mnt/share/id_rsa.pub >> ~/.ssh/authorized_keys
+#echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCSdq/CCqTQm3YzhbI1jMu3XNLQdGjNjTMqQ7xl41o+va0kf1BtNlGdIDNZLxfwcovZrOIK/eXhGvrl130i94aaewrXxwMejo0Y4yETBJFor5uZFPnbsaLLlqSWBgHLmIR6sVkRfeHO/9aaCjQ3dQyQKDZyMIOU0Mp6r7ooKvWrn5tkJSy/iVus8Zq5QDGA11KzGkxb9CKGAbvXVUkrZFIklkps9IdYAQz0H/VT/TmAuboZwvAQpi8Gc9cbL6ZhEx3NSNPNPr31BWD6qJQWHSZf+6vOzqMfEz/akRfBrpXqKhcACQM2gKI/4I+ZWBCFdOvzNzNzG9RjQSS3aVVWVmBfo+rrFGMHr/CmSkSoZjcrO/KEaP1njLxFwSfZik6ngArIae1rgVIm3dgrg1lyD2jjW7tErc7gxlgGIU1NVKPnjLd4K+Gt24EIvBxbcVsR6PL5nA/NHbn41LJ5eSwTP5E0EojuTDNIfrlTgCk8uDkODyrNc791F0MRTCMk1Hy88lCb4OF+NdEtC2QcaSIYtmHbBovXszbYeIk5/5ESSKKr0kZbnRD7oi3jLuz57ZZz+8xaJ10lhzReQVX2xDqboanjBsI55HxIe9Cmdqwszg8zhvK6PKCAVV4AnPoCc2LexfmfEXWrhVun6sSu9s3tkZWc6Ko0MD1nDST9d/6VAnnilw== rsa-key-20230202" >> ~/.ssh/authorized_keys
 sudo chmod 400 ~/.ssh/authorized_keys
 
 #place an nginx-nodeport-example service in filesystem
