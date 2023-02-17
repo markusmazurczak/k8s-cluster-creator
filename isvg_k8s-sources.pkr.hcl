@@ -75,6 +75,7 @@ source "virtualbox-ovf" "k8s-master_conf" {
 
   output_directory = "images/k8s-control-plane"
   output_filename  = "k8s-control-plane"
+  vm_name          = "${var.hostname-control-plane}"
 
   vboxmanage = [
     ["modifyvm", "{{ .Name }}", "--memory", "${var.mem_size-control-plane}"],
@@ -94,6 +95,7 @@ source "virtualbox-ovf" "k8s-worker_conf" {
 
   output_directory = "images/worker/${var.hostname-worker}"
   output_filename  = "${var.hostname-worker}"
+  vm_name          = "${var.hostname-worker}"
 
   vboxmanage = [
     ["modifyvm", "{{ .Name }}", "--memory", "${var.mem_size-worker}"],

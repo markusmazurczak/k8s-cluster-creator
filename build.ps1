@@ -150,7 +150,7 @@ function buildWorkerAndAddToCluster {
     $vmdk = $vboxControlNodeOVF.Substring(0, $vboxControlNodeOVF.Length-4)+"-disk001.vmdk"
     Move-Item -Path $vmdk -Destination $vmdk".bak" -Force
     Write-Host("Exporting VM") -ForegroundColor Green
-    & $vboxManage export $vmName --output=$vboxControlNodeOVF
+    & $vboxManage export $vmName --output=$vboxControlNodeOVF --vsys=0 --vmname $buildParams.control_node.hostname
     if($LASTEXITCODE -ne 0) {
         Write-Host("VM", $vmName, "could not be exported to: ", $vboxControlNodeOVF, "Now you are on your own. Good luck ;)") -ForegroundColor Red
         exit
@@ -161,6 +161,9 @@ function buildWorkerAndAddToCluster {
         Write-Host("VM", $vmName, "could not be unregistered. Try to delete the VM manually using your VBox-UI oder Vboxmanage unregistervm command") -ForegroundColor Red
         exit
     }
+
+    #Delete backup files
+    Remove-Item .\images\k8s-control-plane\*.bak
 }
 
 $target_mapping = @{
