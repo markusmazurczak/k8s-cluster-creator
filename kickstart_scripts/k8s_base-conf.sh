@@ -13,7 +13,7 @@ cd
 yay -S --noconfirm etcd
 
 #Install more stuff
-sudo pacman -S --noconfirm kubelet kubeadm kubectl runc cni-plugins ethtool ebtables socat conntrack-tools helm virtualbox-guest-utils-nox sysstat vim
+sudo pacman -S --noconfirm kubelet kubeadm kubectl runc cni-plugins ethtool ebtables socat conntrack-tools helm virtualbox-guest-utils-nox sysstat vim nfs-utils
 sudo systemctl enable --now vboxservice
 
 #Configure iptables to see bridged traffic
