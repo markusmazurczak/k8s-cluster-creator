@@ -58,6 +58,10 @@ VBoxManage.exe dhcpserver modify --interface "VirtualBox Host-Only Ethernet Adap
 Make sure to set
 - *interface* To the name of the virtual interface you created before
 - And the IP Adresses as you want to but make sure to set the attribut **nodeport_network_cidr** in **build_params.json** to values matching your DHCP range in CIDR format
+If this command throws an error because the DHCP Server is not existing, simply replace *modify* with *add*:
+```
+VBoxManage.exe dhcpserver add --interface "VirtualBox Host-Only Ethernet Adapter #4" --server-ip=192.168.15.2 --netmask=255.255.255.0 --lower-ip=192.168.15.100 --upper-ip=192.168.15.254 --enable
+```
 # Configuration
 Before you execute the build-script, modify the file **build_params.json** to your needs.
 | Attribute | Description |
